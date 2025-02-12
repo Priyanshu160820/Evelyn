@@ -120,6 +120,6 @@ if __name__ == "__main__":
         elif 'quit' in query or 'end' in query or "stop" in query:
             speak("Goodbye! Hope to see you again, sir!")
             exit()
-mehak
+
         elif 'what can you do' in query:
             speak("I'm a basic AI. I can perform various tasks like searching Wikipedia, opening websites, playing music, checking the time, and even creating folders.")
