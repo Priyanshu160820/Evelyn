@@ -8,7 +8,7 @@ import random
 
 engine = pyttsx3.init('sapi5')
 voices = engine.getProperty('voices')
-engine.setProperty('voice', voices[1].id)  # Change voice if needed
+engine.setProperty('voice', voices[2].id)  # Adjust voice if needed
 
 def speak(audio):
     engine.say(audio)
@@ -23,7 +23,7 @@ def wishMe():
     else:
         speak("Good Evening Sir!")
     
-    speak("How may I help you?")
+    speak("How may I assist you?")
 
 def takeCommand():
     r = sr.Recognizer()
@@ -40,6 +40,44 @@ def takeCommand():
         print("Say that again please...")
         return "None"
     return query
+
+def create_text_file():
+    speak("What should be the file name?")
+    file_name = takeCommand().lower()
+    
+    if file_name == "none":
+        speak("File creation canceled.")
+        return
+    
+    speak("Where should I save the file?")
+    location = takeCommand().lower() 
+
+    if location == "none":
+        speak("File creation canceled.")
+        return 
+    
+    if "desktop" in location:
+       folder_path = 'C:\\Users\\pj892\\OneDrive\\Desktop'
+    else:
+        b_path = 'C:\\Users\\pj892\\OneDrive\\Desktop'
+        folder_path = os.path.join(b_path, location)
+
+    file_path = os.path.join(folder_path, f"{file_name}.txt")
+
+    speak("What should I write in the file?")
+    content = takeCommand()
+
+    if content == "none":
+        speak("File creation canceled.")
+        return
+
+    try:
+        with open(file_path, "w") as file:
+            file.write(content)
+        speak(f"File {file_name} has been created")
+    except Exception as e:
+        speak("I couldn't create the file due to an error.")
+        print(e)
 
 if __name__ == "__main__":
     wishMe()
@@ -85,7 +123,7 @@ if __name__ == "__main__":
         elif 'who are you' in query or "hu r u" in query:
             speak("I'm your personal assistant Zira")
         elif "what's your name" in query:
-            speak("I'm Zira, your own personal assistant.")
+            speak("I'm Zira, your personal assistant.")
         elif "what's my name" in query:
             speak("Your name is Priyanshu.")
         elif "nice" in query:
@@ -100,7 +138,7 @@ if __name__ == "__main__":
             speak("Opening VS Code")
             os.startfile(codepath)
 
-        elif 'create folder' in query or 'make a folder' in query:
+        elif 'create a folder' in query or 'make a folder' in query:
             speak("What should be the folder name?")
             folder_name = takeCommand().lower()
 
@@ -108,7 +146,6 @@ if __name__ == "__main__":
                 speak("Folder creation canceled.")
             else:
                 desktop_path = 'C:\\Users\\pj892\\OneDrive\\Desktop'
-                os.chdir(desktop_path)
                 folder_path = os.path.join(desktop_path, folder_name)
 
                 try:
@@ -117,9 +154,12 @@ if __name__ == "__main__":
                 except FileExistsError:
                     speak("A folder with this name already exists on your desktop.")
 
+        elif 'create a file' in query or 'make a file' in query or 'save my words' in query:
+            create_text_file()
+
         elif 'quit' in query or 'end' in query or "stop" in query:
-            speak("Goodbye! Hope to see you again, sir!")
+            speak("Goodbye! Hope to see you again.")
             exit()
 
         elif 'what can you do' in query:
-            speak("I'm a basic AI. I can perform various tasks like searching Wikipedia, opening websites, playing music, checking the time, and even creating folders.")
+            speak("I can perform various tasks like searching Wikipedia, opening websites, playing music, checking the time, creating folders, and even creating text files with your spoken words.")
