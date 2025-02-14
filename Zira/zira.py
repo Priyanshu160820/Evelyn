@@ -121,9 +121,9 @@ if __name__ == "__main__":
             speak(f"It's {strTime} right now!")
 
         elif 'who are you' in query or "hu r u" in query:
-            speak("I'm your personal assistant Zira")
+            speak("I'm your personal assistant Evelyn")
         elif "what's your name" in query:
-            speak("I'm Zira, your personal assistant.")
+            speak("I'm Evelyn, your personal assistant.")
         elif "what's my name" in query:
             speak("Your name is Priyanshu.")
         elif "nice" in query:
