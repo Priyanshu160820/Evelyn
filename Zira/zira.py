@@ -5,10 +5,12 @@ import wikipedia
 import webbrowser
 import os
 import random
+import requests
 
+# Initialize the speech engine
 engine = pyttsx3.init('sapi5')
 voices = engine.getProperty('voices')
-engine.setProperty('voice', voices[2].id)  # Adjust voice if needed
+engine.setProperty('voice', voices[1].id)  # Adjust voice if needed
 
 def speak(audio):
     engine.say(audio)
@@ -79,6 +81,32 @@ def create_text_file():
         speak("I couldn't create the file due to an error.")
         print(e)
 
+# Function to get weather information
+def get_weather(city):
+    api_key = "173093aa33d79bac3822ffed334b8ccf"  # Replace with your OpenWeather API key
+    base_url = "http://api.openweathermap.org/data/2.5/weather?"
+    complete_url = f"{base_url}q={city}&appid={api_key}&units=metric"
+    
+    try:
+        response = requests.get(complete_url)
+        data = response.json()
+        
+        if data["cod"] != "404":
+            main = data["main"]
+            weather = data["weather"][0]
+            
+            temp = main["temp"]
+            pressure = main["pressure"]
+            humidity = main["humidity"]
+            description = weather["description"]
+            
+            weather_report = f"Weather in {city}: {description}. Temperature: {temp}°C, Humidity: {humidity}%, Pressure: {pressure} hPa."
+            return weather_report
+        else:
+            return "City not found!"
+    except Exception as e:
+        return "Sorry, I couldn't fetch the weather details."
+
 if __name__ == "__main__":
     wishMe()
     while True:
@@ -108,7 +136,7 @@ if __name__ == "__main__":
 
         elif 'play music' in query:
             speak('Sure!')
-            music_dir = 'C:\\Users\\pj892\\OneDrive\\Desktop\\musics'
+            music_dir = 'C:\\Users\\Acer\\OneDrive\\Desktop\\musics'
             songs = os.listdir(music_dir)
             if songs:
                 os.startfile(os.path.join(music_dir, random.choice(songs)))
@@ -125,7 +153,7 @@ if __name__ == "__main__":
         elif "what's your name" in query:
             speak("I'm Evelyn, your personal assistant.")
         elif "what's my name" in query:
-            speak("Your name is Priyanshu.")
+            speak("Your name is Omprakash.")
         elif "nice" in query:
             speak("Glad you like it!")
         elif "good" in query:
@@ -134,7 +162,7 @@ if __name__ == "__main__":
             speak("I'm still learning, sir!")
 
         elif 'open code' in query:
-            codepath = "C:\\Users\\pj892\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"
+            codepath = "C:\\Users\\Acer\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe"
             speak("Opening VS Code")
             os.startfile(codepath)
 
@@ -145,7 +173,7 @@ if __name__ == "__main__":
             if folder_name == "none":
                 speak("Folder creation canceled.")
             else:
-                desktop_path = 'C:\\Users\\pj892\\OneDrive\\Desktop'
+                desktop_path = 'C:\\Users\\Acer\\Desktop'
                 folder_path = os.path.join(desktop_path, folder_name)
 
                 try:
@@ -161,5 +189,12 @@ if __name__ == "__main__":
             speak("Goodbye! Hope to see you again.")
             exit()
 
+        elif 'weather in' in query:
+            city = query.replace("weather in", "").strip()
+            speak(f"Checking weather in {city}...")
+            weather_info = get_weather(city)
+            speak(weather_info)
+            print(weather_info)
+
         elif 'what can you do' in query:
-            speak("I can perform various tasks like searching Wikipedia, opening websites, playing music, checking the time, creating folders, and even creating text files with your spoken words.")
+            speak("I can perform various tasks like searching Wikipedia, opening websites, playing music, checking the time, creating folders, creating text files, and even checking the weather.")
